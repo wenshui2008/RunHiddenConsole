@@ -10,7 +10,7 @@ Usages.
 -------------
 	
 	RunHiddenConsole.exe [/l] [/w] commandline
-	**For example:**
+	For example:
 	RunHiddenConsole.exe /l e:\\WNMP\\PHP\\php-cgi.exe -b 127.0.0.1:9000 -c e:\\WNMP\\php\\php.ini
 	RunHiddenConsole.exe /l E:/WNMP/nginx/nginx.exe -p E:/WNMP/nginx
 	The /l is optional, which means printing the result of process startup
