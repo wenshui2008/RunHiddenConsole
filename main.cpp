@@ -120,7 +120,7 @@ void Usage() {
 	 "RunHiddenConsole.exe /l E:/WNMP/nginx/nginx.exe -p E:/WNMP/nginx\n"
 	 "The /l is optional, which means printing the result of process startup\n"
 	 "The /w is optional, which means waiting for termination of the process\n"
-	 "The /o is optional, which means redirectingthe output of the program to a file\n");
+	 "The /o is optional, which means redirecting the output of the program to a file\n");
 }
 
 int _tmain(int _Argc, _TCHAR ** _Argv)
