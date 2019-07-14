@@ -15,5 +15,5 @@ Usages.
 	RunHiddenConsole.exe /l E:/WNMP/nginx/nginx.exe -p E:/WNMP/nginx
 	The /l is optional, which means printing the result of process startup
 	The /w is optional, which means waiting for termination of the process
-	The /o is optional, which means redirectingthe output of the program to a file
+	The /o is optional, which means redirecting the output of the program to a file
 
