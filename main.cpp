@@ -114,12 +114,13 @@ LPTSTR FixPathFileNameString(LPCTSTR pszPath,int &nTextLength)
 
 void Usage() {
 	printf("RunHiddenConsole Usage:\n"
-	 "RunHiddenConsole.exe [/l] [/w] commandline\n"
+		"RunHiddenConsole.exe [/l] [/w] [/o output-file] commandline\n"
 	 "For example:\n"
 	 "RunHiddenConsole.exe /l e:\\WNMP\\PHP\\php-cgi.exe -b 127.0.0.1:9000 -c e:\\WNMP\\php\\php.ini\n"
 	 "RunHiddenConsole.exe /l E:/WNMP/nginx/nginx.exe -p E:/WNMP/nginx\n"
 	 "The /l is optional, which means printing the result of process startup\n"
-	 "The /w is optional, which means waiting for termination of the process\n");
+	 "The /w is optional, which means waiting for termination of the process\n"
+	 "The /o is optional, which means redirectingthe output of the program to a file\n");
 }
 
 int _tmain(int _Argc, _TCHAR ** _Argv)
@@ -127,7 +128,7 @@ int _tmain(int _Argc, _TCHAR ** _Argv)
 	TCHAR * pch;
 	TCHAR * pszExePath,szExePath[MAX_FILEPATH];
 	TCHAR szCurrentDirectory[MAX_FILEPATH];
-	TCHAR * pszCommandLine = NULL;
+	TCHAR * pszCommandLine = NULL,*pszOutputFile = NULL;
 	BOOL bHasSpace;
 	BOOL bReturn;
 	LPTSTR pszEvnVar;
@@ -185,6 +186,19 @@ int _tmain(int _Argc, _TCHAR ** _Argv)
 				case 'w':
 					bWaitExit = 1;
 					break;
+				case 'o':
+					if (i <_Argc -1) {
+						i++;
+						iCmdLinePos ++;
+						pszOutputFile = _Argv[i];
+					}
+					else {
+						_tprintf(TEXT("No output file!\n"));
+						Usage();
+						return -1;
+					}
+					
+					break;
 				}
 			}
 			
@@ -195,6 +209,9 @@ int _tmain(int _Argc, _TCHAR ** _Argv)
 		}
 	}
 	
+	if (iCmdLinePos >= _Argc) {
+		return -1;
+	}
 	if (!InitStdOut()) {
 		return -3;
 	}
@@ -257,17 +274,32 @@ int _tmain(int _Argc, _TCHAR ** _Argv)
 
 	pszEvnVar = (LPTSTR)GetEnvironmentStrings();
 
+	HANDLE hFileStdOut = g_hChildStd_OUT_Wr;
+
+	if (pszOutputFile) {
+		SECURITY_ATTRIBUTES sa;
+		sa.nLength = sizeof(sa);
+		sa.bInheritHandle = TRUE;
+		sa.lpSecurityDescriptor = NULL;
+		
+		hFileStdOut = CreateFile(pszOutputFile,GENERIC_WRITE,FILE_SHARE_READ|FILE_SHARE_WRITE|FILE_SHARE_DELETE,&sa,CREATE_ALWAYS,FILE_ATTRIBUTE_NORMAL,NULL);
+		if (hFileStdOut == INVALID_HANDLE_VALUE) {
+			_tprintf(TEXT("Create output file %s failed\n"),pszOutputFile);
+			return -1;
+		}
+	}
+	
 	si.cb = sizeof(STARTUPINFO); 
-	si.hStdError = g_hChildStd_OUT_Wr;
-	si.hStdOutput = g_hChildStd_OUT_Wr;
+	si.hStdError = hFileStdOut;//g_hChildStd_OUT_Wr;
+	si.hStdOutput = hFileStdOut;//g_hChildStd_OUT_Wr;
 	si.hStdInput = g_hChildStd_IN_Rd;
-	si.dwFlags |= STARTF_USESTDHANDLES;
+	si.dwFlags = STARTF_USESTDHANDLES;
 
 	if (bPrintLog) {
 		_tprintf(TEXT("Starting %s"),pszCommandLine);
 	}
 
-	bReturn = CreateProcess(NULL, pszCommandLine, NULL, NULL, FALSE, CREATE_NO_WINDOW | CREATE_UNICODE_ENVIRONMENT, pszEvnVar, szCurrentDirectory, &si, &pi);
+	bReturn = CreateProcess(NULL, pszCommandLine, NULL, NULL, TRUE, CREATE_NO_WINDOW | CREATE_UNICODE_ENVIRONMENT, pszEvnVar, szCurrentDirectory, &si, &pi);
 	
 	FreeEnvironmentStrings(pszEvnVar);
 	free(pszCommandLine);
@@ -301,6 +333,9 @@ int _tmain(int _Argc, _TCHAR ** _Argv)
 	}
 
 	CloseHandle(pi.hProcess);
+
+	if (hFileStdOut != g_hChildStd_OUT_Wr)
+		CloseHandle(hFileStdOut);
 	
 	return 0;
 }
