@@ -32,15 +32,15 @@ BOOL InitStdOut()
 		ErrorExit("Stdout pipe creation failed\n"); 
 
 	// Ensure the read handle to the pipe for STDOUT is not inherited.
-	if ( ! SetHandleInformation(g_hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0) )
-		ErrorExit("Stdout SetHandleInformation");
+	//if ( ! SetHandleInformation(g_hChildStd_OUT_Rd, HANDLE_FLAG_INHERIT, 0) )
+	//	ErrorExit("Stdout SetHandleInformation");
 
 	if (! CreatePipe(&g_hChildStd_IN_Rd, &g_hChildStd_IN_Wr, &saAttr, 0)) 
 		ErrorExit("Stdin CreatePipe"); 
 
 	// Ensure the write handle to the pipe for STDIN is not inherited. 
-	if ( ! SetHandleInformation(g_hChildStd_IN_Wr, HANDLE_FLAG_INHERIT, 0) )
-		ErrorExit("Stdin SetHandleInformation"); 
+	//if ( ! SetHandleInformation(g_hChildStd_IN_Wr, HANDLE_FLAG_INHERIT, 0) )
+	//	ErrorExit("Stdin SetHandleInformation"); 
 
 	return 1;
 }
@@ -290,8 +290,8 @@ int _tmain(int _Argc, _TCHAR ** _Argv)
 	}
 	
 	si.cb = sizeof(STARTUPINFO); 
-	si.hStdError = hFileStdOut;//g_hChildStd_OUT_Wr;
-	si.hStdOutput = hFileStdOut;//g_hChildStd_OUT_Wr;
+	si.hStdError = hFileStdOut;
+	si.hStdOutput = hFileStdOut;
 	si.hStdInput = g_hChildStd_IN_Rd;
 	si.dwFlags = STARTF_USESTDHANDLES;
 
