@@ -26,7 +26,7 @@ The /o is optional, redirecting the output of the program to a file
 The /p is optional, saving the process id to a file  
 The /r is optional, supervise the child process, if the child process exits, restart the child process  
 The /n is optional, naming control signals  
-The /k is optional, kill the daemon according to the specified control signal  
+The /k is optional, kill the daemon according to the specified control signal name  
 
 # A sample batch file for start service
 ```bash
