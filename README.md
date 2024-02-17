@@ -15,18 +15,18 @@ Let the program run behind without bloking console.
 # Usages.
 -------------
 	
-RunHiddenConsole Usage:
-RunHiddenConsole.exe [/l] [/w] [/r] [/n name] [/k name] [/o output-file] [/p pidfile] commandline
-For example:
+RunHiddenConsole Usage:  
+RunHiddenConsole.exe [/l] [/w] [/r] [/n name] [/k name] [/o output-file] [/p pidfile] commandline  
+For example:  
 RunHiddenConsole.exe /l /r e:\WNMP\PHP\php-cgi.exe -b 127.0.0.1:9000 -c e:\WNMP\php\php.ini
-RunHiddenConsole.exe /l /r E:/WNMP/nginx/nginx.exe -p E:/WNMP/nginx
-The /l is optional, printing the result of process startup
-The /w is optional, waiting for termination of the process
-The /o is optional, redirecting the output of the program to a file
-The /p is optional, saving the process id to a file
-The /r is optional, supervise the child process, if the child process exits, restart the child process
-The /n is optional, naming control signals
-The /k is optional, kill the daemon according to the specified control signal
+RunHiddenConsole.exe /l /r E:/WNMP/nginx/nginx.exe -p E:/WNMP/nginx  
+The /l is optional, printing the result of process startup  
+The /w is optional, waiting for termination of the process  
+The /o is optional, redirecting the output of the program to a file  
+The /p is optional, saving the process id to a file  
+The /r is optional, supervise the child process, if the child process exits, restart the child process  
+The /n is optional, naming control signals  
+The /k is optional, kill the daemon according to the specified control signal  
 
 # A sample batch file for start service
 ```bash
